@@ -3,6 +3,7 @@ package com.example.gitmaze.service;
 import org.springframework.stereotype.Service;
 import com.example.gitmaze.dto.MazeResponse;
 import com.example.gitmaze.dto.Wall;
+import com.example.gitmaze.dto.Item;
 import java.util.*;
 
 @Service
@@ -23,10 +24,23 @@ public class MazeService {
         // DFS 미로 생성 시작 (0,0 부터)
         dfs(0, 0, visited, hWalls, vWalls, width, height);
 
+        // 아이템 랜덤 배치 (예: 10% 확률)
+        List<Item> items = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                // 시작 지점(0,0) 제외하고 랜덤 배치
+                if ((i != 0 || j != 0) && random.nextDouble() < 0.1) {
+                    items.add(new Item("item_" + i + "_" + j, i, j, "star"));
+                }
+            }
+        }
+
         return MazeResponse.builder()
                 .width(width)
                 .height(height)
                 .walls(convertToWallList(width, height, hWalls, vWalls))
+                .items(items)
                 .startPos(Map.of("x", 0, "z", 0))
                 .build();
     }

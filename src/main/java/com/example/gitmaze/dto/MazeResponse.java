@@ -11,5 +11,6 @@ public class MazeResponse {
     private int width;
     private int height;
     private List<Wall> walls;
+    private List<Item> items;
     private Map<String, Integer> startPos;
 }
