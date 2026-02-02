@@ -1,10 +1,10 @@
 package com.example.gitmaze.controller;
 
+import com.example.gitmaze.dto.DimensionPushDto;
 import com.example.gitmaze.service.DimensionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
@@ -15,15 +15,12 @@ public class DimensionController {
     private final DimensionService dimensionService;
 
     @PostMapping("/push")
-    public ResponseEntity<Void> pushDimensions(@RequestBody Map<String, Object> payload) {
-        String userId = (String) payload.get("userId");
-        Map<String, Object> dimensions = (Map<String, Object>) payload.get("dimensions");
-
-        if (userId == null || dimensions == null) {
+    public ResponseEntity<Void> pushDimensions(@RequestBody DimensionPushDto request) {
+        if (request.getUserId() == null || request.getDimensions() == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        dimensionService.pushDimensions(userId, dimensions);
+        dimensionService.pushDimensions(request.getUserId(), request.getDimensions());
         return ResponseEntity.ok().build();
     }
 
