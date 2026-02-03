@@ -16,10 +16,12 @@ public class DimensionService {
 
     @Transactional
     public void pushDimensions(String userId, Map<String, Object> dimensions) {
-        GameState gameState = GameState.builder()
-                .userId(userId)
-                .dimensions(dimensions)
-                .build();
+        GameState gameState = gameStateRepository.findById(userId)
+                .orElse(GameState.builder()
+                        .userId(userId)
+                        .build());
+
+        gameState.setDimensions(dimensions);
         gameStateRepository.save(gameState);
     }
 
