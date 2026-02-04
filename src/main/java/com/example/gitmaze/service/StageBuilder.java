@@ -62,6 +62,9 @@ public class StageBuilder {
                         startX = x;
                         startZ = z;
                         break;
+                    case 'h': // Hidden floor (appears after death)
+                        floorType = "hidden";
+                        break;
                     case 'B': // Block (cube)
                         floorType = "solid";
                         items.add(new Item("block_" + x + "_" + z, x, z, "block_cube"));
