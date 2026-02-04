@@ -1,0 +1,6 @@
+postgres_data
+build
+.gradle
+.git
+Dockerfile
+docker-compose.yml

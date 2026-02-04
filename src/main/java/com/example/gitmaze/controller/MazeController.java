@@ -19,4 +19,9 @@ public class MazeController {
             @RequestParam(defaultValue = "6") int height) {
         return ResponseEntity.ok(mazeService.generateMaze(width, height));
     }
+
+    @GetMapping("/tutorial/{level}")
+    public ResponseEntity<MazeResponse> getTutorialMaze(@PathVariable int level) {
+        return ResponseEntity.ok(mazeService.getTutorialMaze(level));
+    }
 }

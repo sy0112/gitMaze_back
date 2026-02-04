@@ -45,6 +45,96 @@ public class MazeService {
                 .build();
     }
 
+    public MazeResponse getTutorialMaze(int level) {
+        switch (level) {
+            case 1: return createTutorialLevel1();
+            case 2: return createTutorialLevel2();
+            case 3: return createTutorialLevel3();
+            case 4: return createTutorialLevel4();
+            default: return generateMaze(6, 6);
+        }
+    }
+
+    private MazeResponse createTutorialLevel1() {
+        // 3x3 simple path
+        int w = 3;
+        int h = 3;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        for (int i = 0; i <= w; i++) Arrays.fill(vWalls[i], true);
+        for (int i = 0; i < w; i++) Arrays.fill(hWalls[i], true);
+
+        // Path: (0,0) -> (1,0) -> (2,0) -> (2,1) -> (2,2)
+        vWalls[1][0] = false;
+        vWalls[2][0] = false;
+        hWalls[2][1] = false;
+        hWalls[2][2] = false;
+
+        List<Item> items = List.of(new Item("t1_star", 2, 2, "star"));
+        return MazeResponse.builder().width(w).height(h).walls(convertToWallList(w, h, hWalls, vWalls))
+                .items(items).startPos(Map.of("x", 0, "z", 0)).build();
+    }
+
+    private MazeResponse createTutorialLevel2() {
+        // 4x4 Branching
+        int w = 4;
+        int h = 4;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        for (int i = 0; i <= w; i++) Arrays.fill(vWalls[i], true);
+        for (int i = 0; i < w; i++) Arrays.fill(hWalls[i], true);
+
+        // Main Path
+        vWalls[1][0] = false; vWalls[2][0] = false; vWalls[3][0] = false;
+        // Branch at (1,0) down to (1,1)
+        hWalls[1][1] = false; hWalls[1][2] = false;
+
+        List<Item> items = List.of(
+            new Item("t2_star1", 3, 0, "star"),
+            new Item("t2_star2", 1, 2, "star")
+        );
+        return MazeResponse.builder().width(w).height(h).walls(convertToWallList(w, h, hWalls, vWalls))
+                .items(items).startPos(Map.of("x", 0, "z", 0)).build();
+    }
+
+    private MazeResponse createTutorialLevel3() {
+        // 5x5 Dimension Switching path
+        int w = 5;
+        int h = 5;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        for (int i = 0; i <= w; i++) Arrays.fill(vWalls[i], true);
+        for (int i = 0; i < w; i++) Arrays.fill(hWalls[i], true);
+
+        // Path (0,0) -> (0,2) -> (2,2) -> (2,4) -> (4,4)
+        hWalls[0][1] = false; hWalls[0][2] = false;
+        vWalls[1][2] = false; vWalls[2][2] = false;
+        hWalls[2][3] = false; hWalls[2][4] = false;
+        vWalls[3][4] = false; vWalls[4][4] = false;
+
+        List<Item> items = List.of(new Item("t3_star", 4, 4, "star"));
+        return MazeResponse.builder().width(w).height(h).walls(convertToWallList(w, h, hWalls, vWalls))
+                .items(items).startPos(Map.of("x", 0, "z", 0)).build();
+    }
+
+    private MazeResponse createTutorialLevel4() {
+        // 6x6 Advanced
+        int w = 6;
+        int h = 6;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        for (int i = 0; i <= w; i++) Arrays.fill(vWalls[i], true);
+        for (int i = 0; i < w; i++) Arrays.fill(hWalls[i], true);
+
+        // Complex-ish fixed path
+        for(int i=0; i<5; i++) vWalls[i+1][0] = false; // top row
+        for(int i=0; i<5; i++) hWalls[5][i+1] = false; // right col
+
+        List<Item> items = List.of(new Item("t4_star", 5, 5, "star"));
+        return MazeResponse.builder().width(w).height(h).walls(convertToWallList(w, h, hWalls, vWalls))
+                .items(items).startPos(Map.of("x", 0, "z", 0)).build();
+    }
+
     private void dfs(int x, int z, boolean[][] visited, boolean[][] hWalls, boolean[][] vWalls, int w, int h) {
         visited[x][z] = true;
         Integer[] dirs = { 0, 1, 2, 3 }; // 상, 우, 하, 좌
