@@ -10,6 +10,7 @@ import lombok.Getter;
 public class MazeResponse {
     private int width;
     private int height;
+    private String[][] grid; // Floor types: "solid", "pit", "void"
     private List<Wall> walls;
     private List<Item> items;
     private Map<String, Integer> startPos;
