@@ -24,6 +24,7 @@ public class StageService {
             case 2: return createTutorial2();
             case 3: return createTutorial3();
             case 4: return createTutorial4();
+            case 5: return createTutorial5();
             default: return createTutorial1();
         }
     }
@@ -32,6 +33,7 @@ public class StageService {
         switch (level) {
             case 1: return createMain1();
             case 2: return createMain2();
+            case 3: return createMain3();
             // Add more as needed
             default: return createMain1();
         }
@@ -92,6 +94,22 @@ public class StageService {
         return buildResponse(w, h, vWalls, hWalls, List.of(new Item("t4_star", 5, 5, "star")));
     }
 
+    private MazeResponse createTutorial5() {
+        int w = 5, h = 5;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        initWalls(vWalls, hWalls, w, h);
+
+        // Path to center
+        vWalls[1][0] = false; vWalls[2][0] = false;
+        hWalls[2][1] = false; hWalls[2][2] = false; vWalls[3][2] = false;
+
+        return buildResponse(w, h, vWalls, hWalls, List.of(
+            new Item("t5_plate", 3, 2, "plate_cube"),
+            new Item("t5_block", 1, 0, "block_cube")
+        ));
+    }
+
     // --- Main Game Levels ---
 
     private MazeResponse createMain1() {
@@ -123,6 +141,26 @@ public class StageService {
         for(int i=0; i<5; i++) vWalls[i+1][2] = false;
 
         return buildResponse(w, h, vWalls, hWalls, List.of(new Item("m2_star", 5, 2, "star")));
+    }
+
+    private MazeResponse createMain3() {
+        int w = 7, h = 7;
+        boolean[][] hWalls = new boolean[w][h + 1];
+        boolean[][] vWalls = new boolean[w + 1][h];
+        initWalls(vWalls, hWalls, w, h);
+
+        // Open some paths
+        for(int i=0; i<6; i++) {
+            vWalls[i+1][i] = false;
+            hWalls[i][i+1] = false;
+        }
+
+        return buildResponse(w, h, vWalls, hWalls, List.of(
+            new Item("m3_plate_s", 2, 6, "plate_sphere"),
+            new Item("m3_block_s", 1, 1, "block_sphere"),
+            new Item("m3_plate_t", 6, 2, "plate_tetra"),
+            new Item("m3_block_t", 5, 5, "block_tetra")
+        ));
     }
 
     // --- Helpers ---
