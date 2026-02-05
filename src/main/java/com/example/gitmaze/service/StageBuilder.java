@@ -28,7 +28,8 @@ public class StageBuilder {
         }
         for (int z = 0; z < rows.length; z++) {
             if (rows[z].length() != width) {
-                throw new IllegalArgumentException("Grid width mismatch at row " + z + ": expected " + width + ", got " + rows[z].length());
+                throw new IllegalArgumentException(
+                        "Grid width mismatch at row " + z + ": expected " + width + ", got " + rows[z].length());
             }
             grid[z] = rows[z].toCharArray();
         }
@@ -38,15 +39,15 @@ public class StageBuilder {
     public MazeResponse build() {
         List<Item> items = new ArrayList<>();
         String[][] gridData = new String[height][width];
-        
+
         // Parse grid
         for (int z = 0; z < height; z++) {
             for (int x = 0; x < width; x++) {
                 char cell = grid[z][x];
-                
+
                 // Determine floor type
                 String floorType = "void";
-                
+
                 switch (cell) {
                     case '#': // Solid floor
                         floorType = "solid";
@@ -74,6 +75,10 @@ public class StageBuilder {
                         floorType = "solid";
                         items.add(new Item("block_t_" + x + "_" + z, x, z, "block_tetra"));
                         break;
+                    case 'C': // Block (cylinder)
+                        floorType = "solid";
+                        items.add(new Item("block_c_" + x + "_" + z, x, z, "block_cylinder"));
+                        break;
                     case 'P': // Plate (cube)
                         floorType = "solid";
                         items.add(new Item("plate_" + x + "_" + z, x, z, "plate_cube"));
@@ -86,6 +91,10 @@ public class StageBuilder {
                         floorType = "solid";
                         items.add(new Item("plate_t_" + x + "_" + z, x, z, "plate_tetra"));
                         break;
+                    case 'c': // Plate (cylinder)
+                        floorType = "solid";
+                        items.add(new Item("plate_c_" + x + "_" + z, x, z, "plate_cylinder"));
+                        break;
                     case '*': // Star
                         floorType = "solid";
                         items.add(new Item("star_" + x + "_" + z, x, z, "star"));
@@ -93,7 +102,7 @@ public class StageBuilder {
                     default:
                         throw new IllegalArgumentException("Unknown cell type: " + cell + " at (" + x + ", " + z + ")");
                 }
-                
+
                 gridData[z][x] = floorType;
             }
         }
